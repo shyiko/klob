@@ -9,7 +9,7 @@ Used by/Extracted from [ktlint](https://github.com/shyiko/ktlint).
 <dependency>
   <groupId>com.github.shyiko.klob</groupId>
   <artifactId>klob</artifactId>
-  <version>0.1.0</version>
+  <version>0.2.0</version>
   <!-- omit classifier below if you plan to use this library in koltin -->
   <classifier>kalvanized</classifier>
 </dependency>
@@ -18,8 +18,18 @@ Used by/Extracted from [ktlint](https://github.com/shyiko/ktlint).
 > (java)
 
 ```java
+# find all files matching the patterns (! = exclude) 
 Path path = Glob.from("src/**/*.kt", "!src/generated")
-    .iterate(Paths.get("."))/*: Iterator<Path> */.next()
+    .iterate(Paths.get("."))
+    /*: Iterator<Path> */
+    .next()
+
+# match directories only
+String home = System.getProperty("user.home")
+Path path = Glob.from(".IntelliJIdea*/config")
+    .iterate(Paths.get(home), Glob.IterationOption.SKIP_CHILDREN, Glob.IterationOption.DIRECTORY)
+    /*: Iterator<Path> */
+    .next()
 ```
 
 ## Development
