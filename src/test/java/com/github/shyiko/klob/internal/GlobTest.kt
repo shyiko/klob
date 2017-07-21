@@ -125,7 +125,7 @@ class GlobTest {
         assertMatch(Glob(dir, "b/d/*.js"), "!$dir/b/d/c", entire = false)
     }
 
-    fun assertMatch(glob: Glob, target: String, entire: Boolean = true) {
+    internal fun assertMatch(glob: Glob, target: String, entire: Boolean = true) {
         assertThat(glob.matches(target.removePrefix("!"), entire))
             .describedAs("%s -> %s", glob, target).isEqualTo(!target.startsWith("!"))
     }

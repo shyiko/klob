@@ -9,7 +9,7 @@ import java.util.BitSet
  * Settings `restrictToBaseDir` and `includeChildren` to true should yield gitignore-mostly-compatible pattern
  * (leading "\#", "\!", trailing "\ " were "left out" + there is no distinction between files & directories).
  */
-data class Glob(val baseDir: String, val pattern: String, val restrictToBaseDir: Boolean = false,
+internal data class Glob(val baseDir: String, val pattern: String, val restrictToBaseDir: Boolean = false,
     val includeChildren: Boolean = false) {
 
     companion object {

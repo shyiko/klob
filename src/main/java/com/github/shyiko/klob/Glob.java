@@ -30,7 +30,19 @@ public interface Glob {
     Iterator<Path> iterate(Path path);
 
     enum IterationOption {
-        SKIP_HIDDEN
+        /**
+         * Skip hidden files/directories.
+         */
+        SKIP_HIDDEN,
+        /**
+         * By default children are included, e.g. "src" matches not just "src" but "src/path/to/file".
+         * Use this option to change that.
+         */
+        SKIP_CHILDREN,
+        /**
+         * Iterate over directories instead of files.
+         */
+        DIRECTORY
     }
 }
 
