@@ -10,7 +10,8 @@ internal class GlobFileFilter(
     val forceExactMatch: Boolean = false
 ) : FileFilter {
 
-    private val glob: Collection<Glob> = pattern.map { Glob(slash(baseDir), slash(it), includeChildren) }
+    private val glob: Collection<Glob> = pattern.map { Glob(slash(baseDir), slash(it),
+        includeChildren = includeChildren) }
 
     /**
      * @return true if at least one glob explicitly includes file (any matching file excluded by a previous pattern
