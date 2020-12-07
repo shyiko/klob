@@ -44,12 +44,14 @@ internal fun visit(dir: File, filter: FileFilter, directoryModeFilter: FileFilte
 internal fun visit(path: Path, option: EnumSet<IterationOption>, patterns: List<String>): Sequence<Path> {
     val includeChildren = !option.contains(IterationOption.SKIP_CHILDREN)
     val directoryMode = option.contains(IterationOption.DIRECTORY)
+
     if (includeChildren && directoryMode) {
         throw UnsupportedOperationException(
             "Glob.IterationOption.DIRECTORY must be used together with Glob.IterationOption.SKIP_CHILDREN " +
             "(please create a ticket at https://github.com/shyiko/klob/issue if it doesn't fit your needs)"
         )
     }
+
     val baseDir = path.toString()
     val filter = GlobFileFilter(baseDir,
         *patterns.toTypedArray(),
@@ -58,6 +60,7 @@ internal fun visit(path: Path, option: EnumSet<IterationOption>, patterns: List<
         if (option.contains(IterationOption.SKIP_HIDDEN))
             it.and(HiddenFileFilter(reverse = true)) else it
     }
+
     val directoryModeFilter = when {
         option.contains(IterationOption.DIRECTORY) ->
             GlobFileFilter(baseDir,
@@ -67,14 +70,17 @@ internal fun visit(path: Path, option: EnumSet<IterationOption>, patterns: List<
             )
         else -> null
     }
+
     return patterns
+        .asSequence()
         .map { Glob.prefix(slash(it)) }
         .distinct()
-        .map { (if (it.startsWith("/")) File(fromSlash(it)) else File(baseDir, fromSlash(it))).canonicalPath }
-        // remove overlapping paths (e.g. /a & /a/b -> /a)
-        .sorted()
-        .fold(ArrayList<String>(), { r, v -> if (r.isEmpty() || !v.startsWith(r.last())) { r.add(v) }; r })
-        .map { visit(File(it), filter, directoryModeFilter) }
-        .asSequence()
-        .flatten()
+        .map {
+            val file = if (it.startsWith("/"))
+                File(fromSlash(it))
+            else
+                File(baseDir, fromSlash(it))
+
+            visit(file, filter, directoryModeFilter)
+        }.flatten()
 }
